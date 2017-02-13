@@ -1,0 +1,26 @@
+<phpunit
+    bootstrap="src/company/alias/autoloader/autoloader.class.php"
+    colors="true"
+    verbose="true">
+    <testsuites>
+        <testsuite name="company.alias.crypto">
+            <directory suffix="Test.class.php" phpVersion="7" phpVersionOperator=">=">spec/company/alias/crypto/string</directory>
+            <file phpVersion="7" phpVersionOperator=">=">spec/company/alias/crypto/nonceTest.class.php</file>
+            <file phpVersion="7" phpVersionOperator=">=">spec/company/alias/crypto/aes256CtrEncryptedDataTest.class.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+            <exclude>
+                <directory suffix=".php">src/company/alias/autoloader</directory>
+                <directory suffix=".php">src/company/alias/enum</directory>
+                <directory suffix=".php">src/company/alias/projectAlpha</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="tmp/report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80"/>
+        <log type="testdox-html" target="tmp/testdox.html"/>
+    </logging>
+</phpunit>

@@ -1,0 +1,42 @@
+{
+    "name": "alias/projectAlpha",
+    "type": "project",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Devon R.K. McAvoy",
+            "email": "drkmcavoy@gmail.com",
+            "role": "Lead Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/AliasLLC/projectAlpha/issues"
+    },
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "https://github.com/AliasLLC/projectAlpha"
+        }
+    ],
+    "requires":{
+        "php": ">=7.1.0",
+        "ext-mcrypt": "*",
+    },
+    "require-dev":{
+        "phpunit/phpunit": ">=6.1",
+        "phpunit/php-invoker": "*",
+        "phpunit/dbunit": "*",
+        "ext-mbstring": "*",
+        "ext-libsodium": "*",
+    },
+    "suggest":{
+        "ext-libsodium": "Allows for more secure cryptographic functions",
+        "ext-mbstring": "Allows for more secure handling of multibyte strings",
+        "ext-hash": "Allows for more secure string comparison"
+    },
+    "extra":{
+        "branch-alias":{
+            "dev-master": "0.0.x-dev"
+        }
+    }
+}
