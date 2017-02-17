@@ -3,6 +3,7 @@ namespace company\alias\crypto;
 use \company\alias\crypto\RandomData;
 use \company\alias\crypto\string\CryptographicString;
 use \Exception;
+use \InvalidArgumentException;
 
 /*   Copyright 2016 Alias LLC.
 
@@ -28,6 +29,10 @@ class Nonce extends CryptographicString implements RandomData{
      * @param int $length
      */
     public function __construct(int $length){
+        if($length <= 0)
+        {
+            throw new InvalidArgumentException('Length must be greater than 0');
+        }
         $rand = "";
         $strong = true;
         if (static::hasRandomBytes())

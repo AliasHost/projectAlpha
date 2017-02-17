@@ -1,5 +1,5 @@
 <phpunit
-    bootstrap="src/company/alias/autoloader/autoloader.class.php"
+    bootstrap="src/company/alias/autoloader/bootstrap.php"
     colors="true"
     verbose="true">
     <testsuites>

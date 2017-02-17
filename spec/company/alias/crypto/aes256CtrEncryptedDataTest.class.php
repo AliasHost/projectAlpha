@@ -1,7 +1,8 @@
 <?php
 use company\alias\crypto\Aes256CtrEncryptedData;
+use \PHPUnit\Framework\TestCase;
 
-class Aes256CtrEncryptedDataTest extends PHPUnit_Framework_TestCase
+class Aes256CtrEncryptedDataTest extends TestCase
 {
     public function testHasMcrypt()
     {

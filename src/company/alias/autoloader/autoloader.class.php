@@ -33,6 +33,7 @@ class Autoloader
      * @var string $rootFolder Root source folder.
      */
     private $rootFolder = 'src';
+    private $vendorFolder = 'vendor';
     /**
      * @var string $windowsString First three characters of the PHP_OS constant on a windows machine.
      */
@@ -40,7 +41,7 @@ class Autoloader
     /**
      * @var int $logLevel Autoloader log level.
      */
-    private $logLevel = 0;
+    private static $logLevel = 0;
 
     /**
      * @var Autoloader $instance Singleton instance of Autoloader.
@@ -52,53 +53,30 @@ class Autoloader
      */
     protected function __construct()
     {
-        if($this->logLevel)
-        {
-            echo "Matching PHP_OS Constant\r\n";
-        }
+        static::log('Matching PHP_OS Constant');
         if(strtoupper(substr(PHP_OS,0,3)) === $this->windowsString)
         {
-            if($this->logLevel)
-            {
-                echo "On Windows Machine\r\n";
-            }
+            static::log('On Windows Machine');
             $this->windows = true;
-            $parts = explode('\\',$this->path);
         }
         else
         {
-            if($this->logLevel)
-            {
-                echo "On Linux Machine\r\n";
-            }
-            $parts = explode('/',$this->path);
+            static::log('On Linux Machine');
         }
-        if($this->logLevel)
-        {
-            echo "Finding Root Folder\r\n";
-        }
+        $parts = explode($this->getSeperator(),$this->path);
+        static::log('Finding Root Folder');
         $c = count($parts);
         $basePath = array();
         for($i = 0; $i < $c; ++$i)
         {
-            $basePath[] = $parts[$i];
             if(strtolower($parts[$i]) == $this->rootFolder)
             {
                 break;
             }
+            $basePath[] = $parts[$i];
         }
-        if($this->windows)
-        {
-            $this->base = implode('\\',$basePath) . '\\';
-        }
-        else
-        {
-            $this->base = implode('/',$basePath) . '/';
-        }
-        if($this->logLevel)
-        {
-            echo "Root Folder: " . $this->base . "\r\n";
-        }
+        $this->base = implode($this->getSeperator(),$basePath) . $this->getSeperator();
+        static::log('Root Folder: ' . $this->base);
     }
 
     /**
@@ -109,43 +87,22 @@ class Autoloader
      */
     public function loadClass(string $className)
     {
-        if($this->logLevel)
-        {
-            echo "Trying to load " . $className . "\r\n";
-        }
+        static::log('Trying to load ' . $className);
         $parts = explode('\\',$className);
         $c = count($parts);
-        if($this->logLevel)
-        {
-            echo "Converting classname to camelcase\r\n";
-        }
+        static::log('Converting classname to camelcase');
         $filename = strtolower(substr($parts[$c-1],0,1)) . substr($parts[$c-1],1);
         $filepath = '';
-        if($this->windows)
-        {
-            $filepath = implode('\\',array_slice($parts,0,$c-1)) . '\\';
-        }
-        else {
-            $filepath = implode('/',array_slice($parts,0,$c-1)) . '/';
-        }
-        $dir = $this->base . $filepath;
-        if($this->logLevel)
-        {
-            echo "Searching through " . $dir . "\r\n";
-        }
+        $filepath = implode($this->getSeperator(),array_slice($parts,0,$c-1)) . $this->getSeperator();
+        $dir = $this->base . $this->rootFolder . $this->getSeperator() . $filepath;
+        static::log('Searching through ' . $dir);
         foreach($this->types as $t)
         {
             $check = $dir . $filename . '.' . $t . '.php';
-            if($this->logLevel)
-            {
-                echo 'Looking for '. $check . "\r\n";
-            }
+            static::log('Looking for '. $check);
             if(file_exists($check))
             {
-                if($this->logLevel)
-                {
-                    echo 'Including ' . $check . "\r\n";
-                }
+                static::log('Including ' . $check);
                 include_once($check);
                 return true;
             }
@@ -158,10 +115,7 @@ class Autoloader
      */
     public static function registerInstance()
     {
-        if($this->logLevel)
-        {
-            echo "Registering instance of autoloader";
-        }
+        static::log('Registering instance of autoloader');
         $instance = Autoloader::getInstance();
         spl_autoload_register(array($instance,'loadClass'));
     }
@@ -173,24 +127,33 @@ class Autoloader
      */
     public static function getInstance() : Autoloader
     {
-        if($this->logLevel)
-        {
-            echo "Getting instance of autoloader";
-        }
+        static::log('Getting instance of autoloader');
         if(static::$instance === null)
         {
-            if($this->logLevel)
-            {
-                echo "Creating instance of autoloader";
-            }
+            static::log('Creating instance of autoloader');
             static::$instance = new Autoloader();
         }
         return static::$instance;
     }
+
+    private static function log(string $msg) : bool
+    {
+        if(static::$logLevel)
+        {
+            echo $msg . "\r\n";
+            return true;
+        }
+        return false;
+    }
+
+    private function getSeperator() : string
+    {
+        if($this->windows)
+        {
+            return '\\';
+        }
+        else return '/';
+    }
 }
-
-
-//$auto = Autoloader::getInstance();
-//spl_autoload_register(array($auto,'load'));
 
 ?>

@@ -1,7 +1,8 @@
 <?php
 use \company\alias\crypto\string\CryptographicString;
+use \PHPUnit\Framework\TestCase;
 
-class CryptographicStringTest extends PHPUnit_Framework_TestCase
+class CryptographicStringTest extends TestCase
 {
 
     public function testConstruct()
